@@ -1,3 +1,18 @@
+<?php
+require_once 'QnAfunction.php';
+// Pripojenie k databáze
+$db_connection = mysqli_connect("localhost", "root", "", "qna_db");
+
+if (mysqli_connect_errno()) {
+    echo "Chyba: " . mysqli_connect_error();
+    exit();
+}
+// Získavanie údajov o otázkach a odpovediach
+$qna_data = getQuestionsAndAnswers($db_connection);
+
+// Ukončenie pripojenia k databáze
+mysqli_close($db_connection);
+?>
 <!DOCTYPE html>
 <html lang="sk">
 <head>
@@ -40,33 +55,15 @@
       </div>
     </div>
   </section>
-  <section class="container">
-    <?php
-      // Pripojenie k databáze
-      $db_connection = mysqli_connect("localhost", "root", "", "qna_db");
-
-      // Kontrola spojenia
-      if (mysqli_connect_errno()) {
-        echo "Chyba:" . mysqli_connect_error();
-        exit();
-      }
-      // Dotaz na získanie otázok a odpovedí
-      $query = "SELECT question, answer FROM qna_table";
-      $result = mysqli_query($db_connection, $query);
-      // Výpis otázok a odpovedí
-      while ($row = mysqli_fetch_assoc($result)) {
-        echo '<div class="accordion">';
-    echo '<div class="question">' . $row['question'] . '</div>';
-    echo '<div class="answer">' . $row['answer'] . '</div>';
-    echo '</div>';
-    }
-
-    // Uvoľnenie výsledkov
-    mysqli_free_result($result);
-    // Uzavretie spojenia s databázou
-    mysqli_close($db_connection);
-    ?>
-  </section>
+    </section>
+    <section class="container">
+        <?php foreach ($qna_data as $row): ?>
+            <div class="accordion">
+                <div class="question"><?php echo $row['question']; ?></div>
+                <div class="answer"><?php echo $row['answer']; ?></div>
+            </div>
+        <?php endforeach; ?>
+    </section>
 </main>
 <footer class="container bg-dark text-white">
   <div class="row">
