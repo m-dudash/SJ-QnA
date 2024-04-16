@@ -1,17 +1,21 @@
 <?php
-// qna_functions.ph
-function getQuestionsAndAnswers($db_connection) {
-    $query = "SELECT question, answer FROM qna_table";
-    $result = mysqli_query($db_connection, $query);
+// verzia v OOP
 
-    $qna_data = [];
-
-    while ($row = mysqli_fetch_assoc($result)) {
-        $qna_data[] = $row;
+class QnaEngine{
+    private $db_connection;
+    public function __construct($db_connection)
+    {
+        $this->db_connection = $db_connection;
     }
-
-    mysqli_free_result($result);
-
-    return $qna_data;
+    public function getQuestionsAndAnswers(){
+        $query= "SELECT question, answer FROM qna_table";
+        $result= mysqli_query($this->db_connection, $query);
+        $qna_data = [];
+        while ($row= mysqli_fetch_assoc($result) ){
+            $qna_data[]= $row;
+        }
+        mysqli_free_result($result);
+        return $qna_data;
+    }
 }
-?>
+

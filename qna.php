@@ -8,7 +8,8 @@ if (mysqli_connect_errno()) {
     exit();
 }
 // Získavanie údajov o otázkach a odpovediach
-$qna_data = getQuestionsAndAnswers($db_connection);
+$qna_engine = new QnaEngine($db_connection);
+$qna_data = $qna_engine -> getQuestionsAndAnswers();
 
 // Ukončenie pripojenia k databáze
 mysqli_close($db_connection);
